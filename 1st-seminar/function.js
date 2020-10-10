@@ -3,23 +3,21 @@ function add(x, y) {
 }
 console.log(add(2, 3));
 
-var addStr = function(x, y) {
+let addStr = function(x, y) {
     return x + y;
 };
 console.log(addStr("안녕", "하세요"));
 
-var add = (x, y) => {
+var add1 = (x, y) => {
     return x + y;
 };
-console.log(add(2, 3));
+console.log(add1(2, 3));
 
-var add = function(x, y) {
+var add2 = function(x, y) {
     return x + y;
 };
 
-var add = (x, y) => x + y;
-
-var add = (x, y) => x + y;
+var add3 = (x, y) => x + y;
 
 var square = function(x) {
     return x * x;
