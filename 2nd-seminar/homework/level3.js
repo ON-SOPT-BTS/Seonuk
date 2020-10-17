@@ -4,8 +4,13 @@ function encryptPassword(password) {
 
         crypto.randomBytes(64, (err, buf) => {
             const salt = buf.toString("base64");
+
             crypto.pbkdf2(password, salt, 10000, 64, "sha512", (err, key) => {
-                resolve(key.toString("base64"));
+                if (!err) {
+                    resolve(key.toString("base64"));
+                } else {
+                    reject(err);
+                }
             });
         });
     });
@@ -22,9 +27,12 @@ function writeFile(data, file_name) {
 async function init() {
     const password = "1234";
 
-    const encryptedPassword = await encryptPassword(password);
-
-    writeFile(encryptedPassword, "encryption");
+    try {
+        const encryptedPassword = await encryptPassword(password);
+        writeFile(encryptedPassword, "encryption");
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 init();
