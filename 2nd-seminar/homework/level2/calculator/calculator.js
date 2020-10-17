@@ -56,7 +56,7 @@ const divide = (a, b) => {
 
 module.exports = {
     add,
-    substract,
+    subtract,
     multiply,
     divide
 };
