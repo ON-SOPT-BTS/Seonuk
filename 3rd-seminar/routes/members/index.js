@@ -37,7 +37,17 @@ router.post("/", (req, res) => {
         );
 });
 /** 모든 멤버 조회 */
-router.get("/", (req, res) => {});
+router.get("/", (req, res) => {
+    return res
+        .status(statusCode.OK)
+        .json(
+            util.success(
+                statusCode.OK,
+                responseMessage.MEMBER_READ_ALL_SUCCESS,
+                membersDB
+            )
+        );
+});
 /** idx 값으로 특정 멤버 조회 */
 router.get("/:idx", (req, res) => {
     const idx = req.params.idx;
