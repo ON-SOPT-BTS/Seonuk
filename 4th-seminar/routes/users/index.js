@@ -207,4 +207,88 @@ router.get("/:id", async (req, res) => {
             );
     }
 });
+router.delete("/:id", async (req, res) => {
+    const { id } = req.params;
+
+    const user = await User.findOne({
+        where: {
+            id
+        }
+    });
+    console.log(user);
+
+    if (!user) {
+        return res
+            .status(statusCode.BAD_REQUEST)
+            .send(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
+    }
+    const del = await User.destroy({
+        where: {
+            id
+        }
+    });
+
+    return res
+        .status(statusCode.OK)
+        .json(
+            util.success(
+                statusCode.OK,
+                responseMessage.MEMBER_DELETE_SUCCESS,
+                del
+            )
+        );
+});
+router.put("/:id", async (req, res) => {
+    const { id } = req.params;
+    const { userName, pwd } = req.body;
+
+    if (!userName || !pwd) {
+        return res
+            .status(statusCode.BAD_REQUEST)
+            .json(
+                util.fail(statusCode.BAD_REQUEST, responseMessage.NULL_VALUE)
+            );
+    }
+
+    const user = await User.findOne({
+        where: {
+            id
+        }
+    });
+
+    if (!user) {
+        return res
+            .status(statusCode.BAD_REQUEST)
+            .json(util.fail(statusCode.BAD_REQUEST, responseMessage.NO_USER));
+    }
+
+    const salt = crypto.randomBytes(64).toString("base64");
+    //5. 2차 세미나때 배웠던 pbkdf2 방식으로 (비밀번호 + salt) => 암호화된 password
+    const hashedPassword = crypto
+        .pbkdf2Sync(pwd, salt, 10000, 64, "sha512")
+        .toString("base64");
+
+    const updatedUser = await User.update(
+        {
+            userName,
+            password: hashedPassword,
+            salt
+        },
+        {
+            where: {
+                id
+            }
+        }
+    );
+
+    return res
+        .status(statusCode.OK)
+        .json(
+            util.success(
+                statusCode.OK,
+                responseMessage.MEMBER_UPDATE_SUCCESS,
+                updatedUser
+            )
+        );
+});
 module.exports = router;

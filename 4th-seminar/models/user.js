@@ -21,8 +21,9 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         {
+            paranoid: true,
             freezeTableName: true,
-            timestamps: false
+            timestamps: true
         }
     );
 };
